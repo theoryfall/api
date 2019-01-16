@@ -44,7 +44,7 @@ class Powers extends Model {
   static get relationMappings() {
     return {
       next: {
-        relation: Model.ManyToManyRelationThrough,
+        relation: Model.ManyToManyRelation,
         modelClass: __filename,
         join: {
           from: "powers.id",
@@ -56,7 +56,7 @@ class Powers extends Model {
         }
       },
       previous: {
-        relation: Model.ManyToManyRelationThrough,
+        relation: Model.ManyToManyRelation,
         modelClass: __filename,
         join: {
           from: "powers.id",
