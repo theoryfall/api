@@ -17,8 +17,7 @@ function powerList() {
   for (const file of list) {
     const obj = JSON.parse(fs.readFileSync(`${path}/${file}`));
 
-    const isCombo =
-      obj.next_chain.length || obj.previous_chain.length ? true : false;
+    const isCombo = obj.previous_chain.length ? true : false;
 
     const isDisciplinePower =
       obj.sources.length && obj.sources[0].data_type === "discipline"
