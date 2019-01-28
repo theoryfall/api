@@ -1,18 +1,18 @@
-version: '3'
+version: "3"
 services:
   db:
-    image: "postgres"
+    image: "postgres:latest"
     environment:
       POSTGRES_USER: "h3lix"
       POSTGRES_DB: "theoryfall"
-      POSTGRES_PASS: "hihi00hihi"
+      POSTGRES_PASSWORD: "hihi00hihi"
     ports:
-      "5432:5432"
-    restart: "always"
+      - "5432:5432"
     volumes:
-      "/var/lib/postgresql/data:/var/lib/postgresql/data"
+      - "/var/lib/postgressql/data:/var/lib/postgressql/data"
+    restart: "always"
   redis:
-    image: "redis"
+    image: "redis:latest"
     ports:
-      "6379:6379"
+      - "6379:6379"
     restart: "always"

@@ -62,7 +62,7 @@ class Powers extends Model {
           from: "powers.id",
           through: {
             from: "power_combos.child_power_id",
-            to: "powers_combos.parent_power_id"
+            to: "power_combos.parent_power_id"
           },
           to: "powers.id"
         }
