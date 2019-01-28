@@ -61,6 +61,8 @@ exports.seed = async function(knex, Promise) {
     //SEED classes, class_powers
     const { classes, relations } = await buildClassList();
 
+    classRelations = relations;
+
     const classPowerPairings = await knex
       .insert(classes)
       .into("classes")
@@ -82,8 +84,6 @@ exports.seed = async function(knex, Promise) {
   try {
     //SEED disciplines, discipline_powers, discipline_classes
     const { disciplines, relations } = await buildDisciplineList();
-
-    classRelations = relations;
 
     const results = await knex
       .insert(disciplines)
@@ -135,6 +135,16 @@ exports.seed = async function(knex, Promise) {
       .into("races")
       .returning(["id", "slug"]);
 
+    const classes = await knex.select("id", "slug").from("classes");
+
+    const classRacePairings = mappings(
+      classes,
+      source,
+      classRelations,
+      "race",
+      "class_id"
+    );
+
     const disciplines = await knex
       .select("id", "slug", "type")
       .from("disciplines");
@@ -148,7 +158,7 @@ exports.seed = async function(knex, Promise) {
         raceDisciplines.push({ discipline_id: id, race_id: match.id });
       }
     });
-
+    await knex.insert(classRacePairings).into("class_races");
     await knex.insert(raceDisciplines).into("race_disciplines");
   } catch (err) {
     return Promise.reject(err);
