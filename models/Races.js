@@ -11,7 +11,7 @@ class Races extends Model {
   }
 
   static get tableName() {
-    return "disciplines";
+    return "races";
   }
 
   static get jsonSchema() {
