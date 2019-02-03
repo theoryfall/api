@@ -24,8 +24,6 @@ app.register(require("fastify-boom"));
 app.register(require("./utils/objection"));
 
 /* ROUTES */
-// app.register(require("./routes/v1/powers"), { prefix: "/v1" });
-// app.register(require("./routes/v1/classes"), { prefix: "/v1" });
 app.register(require("./routes/v1")["powers"], { prefix: "/v1" });
 app.register(require("./routes/v1")["classes"], { prefix: "/v1" });
 
