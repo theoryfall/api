@@ -24,7 +24,7 @@ const sanitizer = (opts => {
       ? { allowedTags, allowedAttributes, allowedIframeHostnames }
       : opts;
   return function sanitize(req, reply, next) {
-    const request = req.query || req.body;
+    let request = req.query || req.body;
     request = sanitizeThis(request, opts);
     next();
   };
