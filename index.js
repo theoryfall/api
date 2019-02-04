@@ -23,10 +23,12 @@ app.register(require("fastify-boom"));
 /* MIDDLEWARE */
 app.register(require("./utils/objection"));
 
+/* SHARE OUR DATA MODELS */
+app.register(require("./models/"));
+
 /* ROUTES */
 app.register(require("./routes/v1")["powers"], { prefix: "/v1" });
 app.register(require("./routes/v1")["classes"], { prefix: "/v1" });
-
 
 app.listen(process.env.PORT, () =>
   console.log("Server up and running on port %s", process.env.PORT)

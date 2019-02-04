@@ -16,7 +16,11 @@ Object.entries(namespaces).forEach(([key, _routes]) => {
 Object.entries(routes).forEach(([key, _routes]) => {
   Object.values(_routes).forEach(_route => {
     m[key] = function(app, opts, next) {
-      Object.values(_route).forEach(routeOpts => app.route(routeOpts));
+      Object.values(_route).forEach(routeOpts =>
+        typeof routeOpts === "function"
+          ? app.route(routeOpts(app))
+          : app.route(routeOpts)
+      );
       next();
     };
   });

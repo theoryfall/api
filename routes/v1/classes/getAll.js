@@ -1,8 +1,9 @@
 "use strict";
 const Boom = require("boom");
-const Classes = require("../../../models/Classes");
 
 const getAllClasses = async function(req, reply) {
+  const { Classes } = this.models;
+
   let query = Classes.query().eager(
     "[powers.[next.^], disciplines.[powers], races]"
   );
@@ -19,7 +20,7 @@ const getAllClasses = async function(req, reply) {
 };
 
 module.exports = {
-    method: "GET",
-    url: "/classes",
-    handler: getAllClasses
-  };
+  method: "GET",
+  url: "/classes",
+  handler: getAllClasses
+};
