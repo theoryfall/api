@@ -19,6 +19,7 @@ app.register(
   require("./knexfile")[process.env.NODE_ENV]
 );
 app.register(require("fastify-boom"));
+app.register(require("./utils/sanitizer"));
 
 /* MIDDLEWARE */
 app.register(require("./utils/objection"));
