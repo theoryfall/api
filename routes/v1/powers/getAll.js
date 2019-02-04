@@ -1,9 +1,17 @@
-const Powers = require("../../../models/Powers");
 const Boom = require("boom");
 
-async function getAllPowers(req, reply) {
+const schema = {
+  querystring: {
+    page: { type: "integer" },
+    limit: { type: "integer" }
+  }
+};
+
+const getAllPowers = async function(req, reply) {
   let currentPage = parseInt(req.query.page, 10);
   let limit = parseInt(req.query.limit, 10);
+
+  const { Powers } = this.models;
 
   if (!currentPage || currentPage < 1) {
     currentPage = 1;
@@ -43,14 +51,15 @@ async function getAllPowers(req, reply) {
   try {
     powers = await query;
   } catch (err) {
-    throw Boom.boomify(err, { message: err.response.message });
+    throw Boom.boomify(err, { message: err.message });
   }
 
   return { powers };
-}
+};
 
 module.exports = {
   method: "GET",
   url: "/powers",
+  schema,
   handler: getAllPowers
 };

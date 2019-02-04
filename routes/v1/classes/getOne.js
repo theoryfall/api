@@ -1,12 +1,22 @@
 "use strict";
 const Boom = require("boom");
 
-const getOne = async function(req, reply, next) {
+const schema = {
+  params: {
+    type: "object",
+    properties: {
+      slug: { type: "string" }
+    }
+  }
+};
+
+const getOneClass = async function(req, reply) {
   const { slug } = req.params;
   const { Classes } = this.models;
   const query = Classes.query()
     .where("slug", slug)
-    .eager("[powers.[next.^], disciplines.[powers], races]");
+    .eager("[powers.[next.^], disciplines.[powers], races]")
+    .first();
 
   let result;
 
@@ -23,7 +33,8 @@ module.exports = app => {
   return {
     method: "GET",
     url: "/class/:slug",
+    schema,
     beforeHandler: [],
-    handler: getOne
+    handler: getOneClass
   };
 };
