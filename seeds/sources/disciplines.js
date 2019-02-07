@@ -63,7 +63,7 @@ function buildDisciplineList() {
       const created_at = new Date().toISOString();
       const updated_at = created_at;
 
-      const data = JSON.stringify({
+      const stats = JSON.stringify({
         slots_granted: obj.slots_granted,
         slots_removed: obj.slots_removed,
         stats: obj.stats,
@@ -79,7 +79,7 @@ function buildDisciplineList() {
         type: obj.type,
         icon: `http://localhost/assets/images/discipline/${slug}.png`,
         icon_svg: `http://localhost/assets/images/discipline/${slug}.svg`,
-        data,
+        stats,
         created_at,
         updated_at
       });
@@ -93,8 +93,11 @@ function buildDisciplineList() {
       });
     }
 
-    resolve({ disciplines: results, relations });
+    resolve({
+      disciplines: results.sort((a, b) => a.type - b.type),
+      relations
+    });
   });
 }
 
-module.exports = { buildDisciplineList };
+module.exports = buildDisciplineList;

@@ -2,19 +2,19 @@ const Boom = require("boom");
 
 const schema = {
   querystring: {
-    page: { type: "integer" },
-    limit: { type: "integer" }
+    page: { type: "number" },
+    limit: { type: "number" }
   }
 };
 
 const getAllPowers = async function(req, reply) {
-  let currentPage = parseInt(req.query.page, 10);
-  let limit = parseInt(req.query.limit, 10);
+  let page = req.query.page ? parseInt(req.query.page, 10) : 1;
+  let limit = req.query.limit ? parseInt(req.query.limit, 10) : 25;
 
   const { Powers } = this.models;
 
-  if (!currentPage || currentPage < 1) {
-    currentPage = 1;
+  if (!page || page < 1) {
+    page = 1;
   } else if (!limit || limit < 25) {
     limit = 25;
   } else if (limit > 100) {
@@ -39,8 +39,8 @@ const getAllPowers = async function(req, reply) {
     "targeting"
   ];
 
-  const start = (currentPage - 1) * limit,
-    end = currentPage * limit - 1;
+  const start = (page - 1) * limit,
+    end = page * limit - 1;
 
   let query = Powers.query()
     .columns(columns)

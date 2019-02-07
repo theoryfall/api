@@ -1,7 +1,7 @@
 "use strict";
 const { buildPowerList, powerRelations } = require("./sources/powers");
 const { buildClassList } = require("./sources/classes");
-const { buildDisciplineList } = require("./sources/disciplines");
+const buildDisciplineList  = require("./sources/disciplines");
 
 const mappings = function(ref, source, relations, type, parentIdName) {
   const results = [];

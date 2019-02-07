@@ -1,3 +1,4 @@
+"use strict";
 const sanitizeHtml = require("sanitize-html");
 const fp = require("fastify-plugin");
 
@@ -19,9 +20,12 @@ const sanitizer = (opts => {
   const allowedTags = [];
   const allowedAttributes = {};
   const allowedIframeHostnames = [];
+  const textFilter = text => {
+    return text.replace(/{{\s*[\w\.]+\s*}}/g, "");
+  };
   opts =
     typeof opts === undefined
-      ? { allowedTags, allowedAttributes, allowedIframeHostnames }
+      ? { allowedTags, allowedAttributes, allowedIframeHostnames, textFilter }
       : opts;
   return function sanitize(req, reply, next) {
     let request = req.query || req.body;

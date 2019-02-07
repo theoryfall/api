@@ -49,7 +49,7 @@ class Disciplines extends Model {
           to: "powers.id"
         }
       },
-      classRequisites: {
+      classes: {
         relation: Model.ManyToManyRelation,
         modelClass: Classes,
         join: {

@@ -1,29 +1,19 @@
 "use strict";
 const m = {};
 
-const routes = {};
-
-const namespaces = require("require-all")({
+const routes = require("require-all")({
   dirname: __dirname,
   filter: /[^index\.js]\w*\.js$/,
   recursive: true
 });
 
-Object.entries(namespaces).forEach(([key, _routes]) => {
-  routes[key] = { routes: _routes };
-});
-
-Object.entries(routes).forEach(([key, _routes]) => {
-  Object.values(_routes).forEach(_route => {
-    m[key] = function(app, opts, next) {
-      Object.values(_route).forEach(routeOpts =>
-        typeof routeOpts === "function"
-          ? app.route(routeOpts(app))
-          : app.route(routeOpts)
-      );
-      next();
-    };
-  });
+Object.keys(routes).forEach(key => {
+  m[key] = function(app, opts, next) {
+    Object.values(routes[key]).forEach(route => {
+      typeof route === "function" ? app.route(route(app)) : app.route(route);
+    });
+    next();
+  };
 });
 
 module.exports = m;
