@@ -13,12 +13,10 @@ const getAllPowers = async function(req, reply) {
 
   const { Powers } = this.models;
 
-  if (!page || page < 1) {
+  if (page < 1) {
     page = 1;
-  } else if (!limit || limit < 25) {
+  } else if (limit < 25) {
     limit = 25;
-  } else if (limit > 100) {
-    limit = 100;
   }
 
   const columns = [

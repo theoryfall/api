@@ -19,7 +19,7 @@ class Classes extends Model {
       type: "object",
       required: ["name", "slug", "icon", "icon_svg"],
       properties: {
-        id: { type: "integer" },
+        id: { type: "string" },
         name: { type: "string" },
         description: { type: "string" },
         slug: { type: "string" },

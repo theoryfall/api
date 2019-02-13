@@ -1,7 +1,10 @@
 "use strict";
 const { buildPowerList, powerRelations } = require("./sources/powers");
 const { buildClassList } = require("./sources/classes");
-const buildDisciplineList  = require("./sources/disciplines");
+const buildDisciplineList = require("./sources/disciplines");
+const fs = require("fs");
+const { promisify } = require("util");
+const asyncWriteFile = promisify(fs.writeFile);
 
 const mappings = function(ref, source, relations, type, parentIdName) {
   const results = [];
@@ -40,9 +43,13 @@ exports.seed = async function(knex, Promise) {
     const _tableData = await knex
       .insert(powers)
       .into("powers")
-      .returning(["id", "slug"]);
+      .returning(["id", "name", "slug"]);
     const joinTable = await powerRelations(_tableData, relations);
     await knex.insert(joinTable).into("power_combos");
+
+    const output = _tableData.join("\n");
+
+    await asyncWriteFile("powers_output.txt", output);
   } catch (err) {
     console.log(err);
     return Promise.reject(err);

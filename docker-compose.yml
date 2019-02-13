@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - "/var/lib/postgressql/data:/var/lib/postgressql/data"
+      - "/bar/lib/postgressql/backups:/backups"
     restart: "always"
   redis:
     image: "redis:latest"

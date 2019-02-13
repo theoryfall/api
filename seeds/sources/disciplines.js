@@ -8,6 +8,8 @@ const slugOpts = {
   lower: true
 };
 
+const { convertRomanToNumber } = require("../../utils/helpers");
+
 const requiredProperties = [
   "name",
   "description",
@@ -23,6 +25,18 @@ const requiredProperties = [
   "tray_removed"
 ];
 
+function convert(arr) {
+  const pattern = /(ix|iv|v?i{0,3})$/g;
+  return arr.map(power => {
+    if (pattern.test(power)) {
+      const roman = power.match(pattern)[0];
+      const name = power.split(pattern)[0];
+      power = slugify(name + convertRomanToNumber(roman));
+    }
+    return power;
+  });
+}
+
 function walk(dir) {
   var results = [];
   var list = fs.readdirSync(dir);
@@ -36,15 +50,19 @@ function walk(dir) {
 }
 
 function buildDisciplineList() {
-  return new Promise(function(resolve, reject) {
-    const results = [];
+  return new Promise((resolve, reject) => {
+    let list = [],
+      relations = [];
+    const dir = path.resolve("../api/crowfall-data/data/disciplines");
+    const stat = fs.statSync(dir);
+    if (!stat || !stat.isDirectory()) {
+      reject(`${dir} is not a readable directory.`);
+    }
 
-    let relations = {};
+    const files = fs.readdirSync(dir);
 
-    const dir = path.resolve("../api/crowfall-data/data/discipline");
-
-    for (const file of walk(dir)) {
-      const obj = JSON.parse(fs.readFileSync(file));
+    for (const file of files) {
+      const obj = JSON.parse(fs.readFileSync(`${dir}/${file}`));
 
       requiredProperties.forEach(propName => {
         if (obj[propName] === undefined) {
@@ -54,32 +72,41 @@ function buildDisciplineList() {
         }
       });
 
-      if (results.some(dup => dup.name === obj.name)) {
+      if (list.some(dup => dup.name === obj.name)) {
         reject(`${file}: has a duplicate name property`);
       }
 
       const slug = slugify(obj.name, slugOpts);
 
+      const {
+        stats,
+        equips,
+        tray_removed,
+        tray_granted,
+        slots_removed,
+        slots_granted
+      } = obj;
+
+      const trays_and_slots = JSON.stringify({
+        tray_granted,
+        tray_removed,
+        slots_granted,
+        slots_removed
+      });
+
       const created_at = new Date().toISOString();
       const updated_at = created_at;
 
-      const stats = JSON.stringify({
-        slots_granted: obj.slots_granted,
-        slots_removed: obj.slots_removed,
-        stats: obj.stats,
-        equips: obj.equips,
-        tray_granted: obj.tray_granted,
-        tray_removed: obj.tray_removed
-      });
-
-      results.push({
+      list.push({
         name: obj.name,
         description: obj.description,
         slug,
         type: obj.type,
         icon: `http://localhost/assets/images/discipline/${slug}.png`,
         icon_svg: `http://localhost/assets/images/discipline/${slug}.svg`,
-        stats,
+        stats: JSON.stringify(stats),
+        equips: JSON.stringify(equips),
+        trays_and_slots,
         created_at,
         updated_at
       });
@@ -88,15 +115,12 @@ function buildDisciplineList() {
         [slug]: {
           classes: obj.classes,
           tags: obj.tags,
-          powers: obj.powers
+          powers: convert(obj.powers)
         }
       });
     }
 
-    resolve({
-      disciplines: results.sort((a, b) => a.type - b.type),
-      relations
-    });
+    resolve({ disciplines: list, relations });
   });
 }
 

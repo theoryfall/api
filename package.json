@@ -29,6 +29,7 @@
     "fastify-jwt": "^0.9.1",
     "fastify-knexjs": "^1.0.14",
     "fastify-redis": "^3.0.0",
+    "got": "^9.6.0",
     "knex": "^0.16.3",
     "objection": "^1.4.0",
     "pg": "^7.8.0",

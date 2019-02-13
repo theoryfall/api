@@ -17,7 +17,7 @@ class Disciplines extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["name", "slug", "icon", "icon_svg", "data", "type"],
+      required: ["name", "slug", "icon", "icon_svg", "stats", "type"],
       properties: {
         id: { type: "integer" },
         name: { type: "string" },
@@ -26,7 +26,7 @@ class Disciplines extends Model {
         icon: { type: "string" },
         icon_svg: { type: "string" },
         type: { type: "string" },
-        data: { type: "json" },
+        stats: { type: "string" },
         created_at: { type: "string" },
         updated_at: { type: "string" }
       }
